@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './contentScript.css'
-import MainItem from './components/MainItem'
+import AppUI from './AppUI'
 
 console.log('contentscript')
 const test = <p id="overlay">Hello</p>
@@ -10,7 +10,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <MainItem></MainItem>
+        <AppUI></AppUI>
       </div>
     )
   }
