@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import Card from './components/UI/Card'
+import Menu from './components/UI/Menu'
 import TextBox from './components/UI/TextBox'
+import Subtitles from './components/UI/Subtitles'
+
+let media = document.querySelector('video')
+
+// function AddSubtitles() {
+//   let container = media
+//   console.log(container)
+
+//   class SubtitleContainer extends React.Component {
+//     render() {
+//       return (
+//         <div id="SubtitleContainer">
+//           <TextBox className="subtitle-container">dsds</TextBox>
+//         </div>
+//       )
+//     }
+//   }
+//   // document.querySelector('video').play()
+//   const root1 = document.createElement('div')
+//   container.appendChild(root1)
+//   ReactDOM.render(<SubtitleContainer />, container)
+// }
 
 function AppUI() {
   let lyrics = `When the days are cold and the cards all fold
@@ -44,19 +66,63 @@ function AppUI() {
     Don't get too close; it's dark inside
     It's where my demons hide, it's where my demons hide`
 
-  let songName = 'Imagine Dragons - Demons'
-  let header = `Now Playing : ${songName}`
+  let [artist, setArtist] = useState('')
+  let [song, setSong] = useState('')
+  let header = `Now Playing : ${artist} - ${song}`
+  let more = document.getElementById('more')
+  let btnCollection = document.getElementsByClassName(
+    'more-button style-scope ytd-video-secondary-info-renderer'
+  )
+  let lessCollection = document.getElementsByClassName(
+    'less-button style-scope ytd-video-secondary-info-renderer'
+  )
 
-  // let currentTime = document.getElementById('ytp-time-current')
-  //console.log(currentTime)
+  if (btnCollection.length > 0) {
+    showMore()
+  }
+
+  chrome.runtime.onMessage.addListener(function () {
+    //  console.log('updated')
+    showMore()
+  })
+  more.addEventListener('DOMNodeInserted', showMore)
+  function showMore() {
+    let btn = btnCollection[0] as HTMLElement
+    //  console.log(btnCollection)
+    btn.click()
+
+    setTimeout(() => {
+      let rowList = document.getElementsByClassName(
+        'style-scope ytd-metadata-row-renderer'
+      )
+      // console.log(rowList)
+      for (let element of rowList) {
+        let nextElement = element.nextElementSibling
+
+        if (nextElement && element.id == 'title') {
+          if ((element as HTMLElement).innerText == 'Song') {
+            setSong((nextElement.children[0] as HTMLElement).innerText)
+          } else if ((element as HTMLElement).innerText == 'Artist') {
+            setArtist((nextElement as HTMLElement).innerText)
+          }
+        }
+        if (song && artist) break
+      }
+      let lessBtn = lessCollection[0] as HTMLElement
+      lessBtn.click()
+    }, 0)
+  }
   return (
     <div className="app-ui">
-      <TextBox className="sng-header">
+      <Subtitles></Subtitles>
+      <TextBox className="song-header">
         <h2>{header}</h2>
       </TextBox>
-      <TextBox className="sng-lyrics">{lyrics}</TextBox>
+      <TextBox className="song-lyrics">{lyrics}</TextBox>
+      <Menu></Menu>
     </div>
   )
 }
 
-export default AppUI
+export { AppUI }
+//export { AddSubtitles }

@@ -5,3 +5,17 @@
   max-width: 100%;
   max-height: 300px;
 }
+
+#SubtitleContainer {
+  color: white !important;
+  font-size: 20px;
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+
+  z-index: 9999;
+}
+
+video {
+  position: relative !important;
+}
