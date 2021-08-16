@@ -1,35 +1,215 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import ReactDOM, { Fragment } from 'react'
 import './Subtitles.css'
+import axios from 'axios'
+import SongMetaContext from '../context/song-meta-context'
+//let currentSubIdx = 0
 
-function Subtitles() {
-  const classes = 'song-subtitles'
+function Subtitles(props) {
+  const id = 'song-subtitles'
+  const ytdWatchFlexy = document.querySelector('ytd-watch-flexy')
+  const ytp = document.querySelector('video')
+  //   const [currentSub, setCurrentSub] = useState('Before Start')
+  const [theaterMode, setTheaterMode] = useState(
+    ytdWatchFlexy.hasAttribute('theater')
+  )
+  const trackMeta = useContext(SongMetaContext)
 
-  let ytp = document.querySelector('video')
-  const [currentSub, setCurrentSub] = useState('Before Start')
+  const [currentSubIdx, setCurrentSubIdx] = useState(-1)
+  const [subs, setSubs] = useState(null)
+  const karaokeBtn = document.getElementById('karaoke-button')
+  //   const observer = new MutationObserver(mutationHandler)
+  //   observer.observe(ytdWatchFlexy, { attributes: true })
+
+  //   function mutationHandler(mutationlist, observer) {
+  //     console.log('click')
+  //     mutationlist.forEach((mutation) => {
+  //       if (mutation.type == 'attributes') {
+  //         console.log(mutation.attributeName)
+
+  //         console.log(mutation.oldValue)
+  //         if (
+  //           mutation.attributeName == 'title' &&
+  //           mutation.value == 'Default view (t)'
+  //         )
+  //           console.log('todefault')
+  //         else if (
+  //           mutation.attributeName == 'title' &&
+  //           mutation.value == 'Theater mode (t)'
+  //         )
+  //           console.log('totheater')
+  //       }
+  //     })
+  //   }
+
+  //   ytp.addEventListener('timeupdate', function () {
+  //     let timing = ytp.currentTime * 1000
+
+  //     let subs = subsJSN['subtitles']
+  //     if (
+  //       timing >= subs[currentSubIdx].start &&
+  //       timing <= subs[currentSubIdx].end
+  //     ) {
+  //       setCurrentSub(subs[currentSubIdx].text)
+  //     } else if (
+  //       timing > subs[currentSubIdx].end &&
+  //       subs.length > currentSubIdx + 1
+  //     ) {
+  //       currentSubIdx++
+  //       setCurrentSub(subs[currentSubIdx].text)
+  //     }
+  //   })
+  //   ytp.addEventListener('seeked', function () {
+  //     getCurrentSubBinarySearch(0, subsJSN['subtitles'].length - 1)
+  //   })
+  //   function getCurrentSubBinarySearch(start, end) {
+  //     let timing = ytp.currentTime * 1000
+  //     let subs = subsJSN['subtitles']
+  //     let mid = end - start
+  //     let idx = Math.floor(mid)
+  //     console.log(idx)
+  //     if (timing >= subs[idx].start && timing <= subs[idx].end) {
+  //       currentSubIdx = idx
+  //       setCurrentSub(subs[idx].text)
+  //     } else if (timing < subs[idx].start) {
+  //       if (idx != 0) {
+  //         getCurrentSubBinarySearch(start, idx - 1)
+  //       } else {
+  //         currentSubIdx = 0
+  //         setCurrentSub('Before Start')
+  //       }
+  //     } else if (timing > subs[idx].end) {
+  //       if (idx != subsJSN['subtitles'].length - 1)
+  //         getCurrentSubBinarySearch(idx + 1, end)
+  //       else {
+  //         currentSubIdx = idx
+  //       }
+  //     }
+  //   }
+
+  //   ytp.addEventListener('timeupdate', function () {
+  //     let timing = ytp.currentTime * 1000
+
+  //     let subs = subsJSN['subtitles']
+  //     if (currentSubIdx != -1 || subs[currentSubIdx + 1].start > timing) {
+  //       if (
+  //         timing >= subs[currentSubIdx + 1].start &&
+  //         subs.length > currentSubIdx + 1
+  //       ) {
+  //         setCurrentSubIdx(currentSubIdx + 1)
+  //       }
+  //     }
+  //   })
+  useEffect(() => {
+    if (trackMeta.artistName && trackMeta.songName) {
+      fetchSubtitlesHandler()
+      setCurrentSubIdx(-1)
+    }
+  }, [trackMeta.songName])
+
+  async function fetchSubtitlesHandler() {
+    const videoID = youtubeIdParser(window.location.href)
+    try {
+      const response = await axios.get(
+        `https://youtubeextensionfinalprojectserver20210804205040.azurewebsites.net/Song/karaoke/${trackMeta.artistName}/${trackMeta.songName}/${videoID}`
+      )
+      console.log(response)
+      props.reportDataFetchResults(true)
+      setSubs(response.data.subtitles)
+    } catch (error) {
+      props.reportDataFetchResults(false)
+      setSubs(null)
+    }
+  }
+  function youtubeIdParser(url) {
+    let regExp =
+      /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i
+    let match = url.match(regExp)
+    return match && match[1].length == 11 ? match[1] : false
+  }
+
+  if (karaokeBtn) {
+    karaokeBtn.addEventListener('input', function () {
+      let btn = document.getElementById('karaoke-button')
+      let element = document.getElementById(id)
+      element.hidden = !(btn as HTMLInputElement).checked
+    })
+  }
+
+  document
+    .getElementsByClassName('ytp-size-button ytp-button')[0]
+    .addEventListener('click', function () {
+      let value = ytdWatchFlexy.hasAttribute('theater')
+      if (theaterMode != !value) setTheaterMode(!value)
+    })
 
   ytp.addEventListener('timeupdate', function () {
-    let timing = ytp.currentTime * 1000
-
-    let subs = subExample['subtitles']
-    if (
-      timing >= subs[currentSubIdx].start &&
-      timing <= subs[currentSubIdx].end
-    ) {
-      setCurrentSub(subs[currentSubIdx].text)
-    } else if (
-      timing > subs[currentSubIdx].end &&
-      subs.length > currentSubIdx + 1
-    ) {
-      currentSubIdx++
-      setCurrentSub(subs[currentSubIdx].text)
+    let element = document.getElementById(id)
+    if (subs && element && !element.hidden && shouldSearchNewSub()) {
+      getCurrentSubBinarySearch(0, subs.length - 1)
     }
   })
-  return <div className={classes}>{currentSub}</div>
+
+  useEffect(() => {
+    let subs = document.getElementById(id)
+    subs.textContent = getCurrentSub()
+  }, [currentSubIdx])
+
+  function shouldSearchNewSub() {
+    let timing = ytp.currentTime * 1000
+    switch (currentSubIdx) {
+      case -1:
+        return timing >= subs[0].start
+      case -2:
+        return timing <= subs[subs.length - 1].end
+      default:
+        return (
+          timing >= subs[currentSubIdx].start &&
+          timing <= subs[currentSubIdx].end
+        )
+    }
+  }
+  function getCurrentSubBinarySearch(start, end) {
+    let timing = ytp.currentTime * 1000
+    let mid = end - start
+    let idx = Math.floor(mid)
+    if (idx < 0) return
+    if (timing >= subs[idx].start && timing <= subs[idx].end) {
+      setCurrentSubIdx(idx)
+    } else if (timing < subs[idx].start) {
+      if (idx > 0) {
+        getCurrentSubBinarySearch(start, idx - 1)
+      } else {
+        setCurrentSubIdx(-1)
+      }
+    } else if (timing > subs[idx].end) {
+      if (idx < subs.length - 1) getCurrentSubBinarySearch(idx + 1, end)
+      else {
+        setCurrentSubIdx(-2)
+      }
+    }
+  }
+  function getCurrentSub() {
+    if (currentSubIdx === -1 || currentSubIdx === -2) {
+      return ''
+    } else {
+      return subs[currentSubIdx].text.replace('<br>', '\n')
+    }
+  }
+  return (
+    <div
+      hidden={!props.enabled}
+      className={`subtitles-container ${theaterMode ? 'theater' : 'default'}`}
+      id={id}
+    >
+      <span className="subtitles-text">{getCurrentSub()}</span>
+    </div>
+  )
 }
 
 export default Subtitles
 
-let subStrExample = `{
+var subStrExample = `{
   "version_number": 10,
   "sub_format": "json",
   "subtitles": [
@@ -486,6 +666,3 @@ let subStrExample = `{
   "site_uri": "https://amara.org/en/videos/WxHfhGYyU09R/en/137629/11731596/"
 }
 `
-
-let subExample = JSON.parse(subStrExample)
-let currentSubIdx = 0

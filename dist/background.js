@@ -1,2 +1,8 @@
-console.log("Background"),chrome.tabs.onUpdated.addListener((function(e){chrome.tabs.sendMessage(e,"Url changed")}));
-//# sourceMappingURL=background.js.map
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!***************************************!*\
+  !*** ./src/background/background.tsx ***!
+  \***************************************/
+
+/******/ })()
+;

@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './contentScript.css'
 import { AppUI } from './AppUI'
-
 console.log('contentscript') // Check if content script loads, for debug only
 
 ///* App injection  when the page is fully loaded*///

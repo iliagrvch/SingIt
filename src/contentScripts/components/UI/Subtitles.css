@@ -1,3 +1,23 @@
-.song-subtitles {
+.subtitles-container.default {
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black,
+    0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
   color: white !important;
+  position: absolute;
+  font-size: large;
+  text-align: center;
+  bottom: 20%;
+  width: 100%;
+  z-index: 9999;
+}
+
+.subtitles-container.theater {
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black,
+    0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
+  color: white !important;
+  position: absolute;
+  font-size: large;
+  width: 100%;
+  text-align: center;
+  bottom: 10%;
+  z-index: 9999;
 }
