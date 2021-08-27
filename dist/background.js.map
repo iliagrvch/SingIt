@@ -1,1 +1,1 @@
-{"version":3,"file":"background.js","sources":["webpack://chrome-extension-for-yt-songs/./src/background/background.tsx"],"sourcesContent":["console.log('Background');\r\nchrome.tabs.onUpdated.addListener(function (tabID) {\r\n    chrome.tabs.sendMessage(tabID, 'Url changed');\r\n});\r\n"],"mappings":";;;;;AAAA;AACA;AACA;AACA;;;A","sourceRoot":""}
+{"version":3,"file":"background.js","sources":["webpack://chrome-extension-for-yt-songs/background.js"],"mappings":"AAAA","sourceRoot":""}

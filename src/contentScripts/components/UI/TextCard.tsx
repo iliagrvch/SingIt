@@ -1,45 +1,49 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import './Lyrics.css'
-import axios from 'axios'
-function Lyrics(props) {
-  const id = 'singit-lyrics'
-  let [isVisible, setIsVisible] = useState(false)
-  let [lyrics, setLyrics] = useState('')
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
-  async function fetchLyricsHandler() {
-    try {
-      const response = await axios.get(
-        `https://youtubeextensionfinalprojectserver20210804205040.azurewebsites.net/Song/lyrics/${props.songMeta.artistName}/${props.songMeta.songName}`
-      )
-      console.log(response)
-      const data = response.data
+const TextArea = styled.div`
+  color: ${(props) => (props.isDark ? 'white' : 'black')} !important;
+  white-space: pre-line;
+  margin: 20px 0px 20px 0px;
+  direction: ltr;
 
-      if (data === 'There is no such song to that artist.') {
-        props.reportDataFetchResults(false)
-        setLyrics('')
-      } else {
-        props.reportDataFetchResults(true)
-        setLyrics(data)
-      }
-    } catch (error) {
-      props.reportDataFetchResults(false)
-      setLyrics('')
-    }
+  & p {
+    max-width: 700px;
+    font-size: 12px;
   }
+  & hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    margin: 5px 0px 5px 0px;
+  }
+`
+function TextCard(props) {
+  const id = `song-text-${props.id}`
+  const ytHtml = document.querySelector('html')
+  const [darkMode, setDarkMode] = useState(ytHtml.hasAttribute('dark'))
+  const observer = new MutationObserver(mutationHandler)
+  observer.observe(ytHtml, {
+    attributes: true,
+  })
 
-  useEffect(() => {
-    if (props.songMeta.artistName && props.songMeta.songName) {
-      // fetchLyricsHandler()
-    }
-  }, [props.songMeta])
-
+  function mutationHandler(mutations) {
+    const isDark = ytHtml.hasAttribute('dark')
+    setDarkMode(isDark)
+  }
   return (
-    <Fragment>
-      <div id={id} hidden={false}>
-        {lyrics}
-      </div>
-    </Fragment>
+    <TextArea hidden={!props.enabled} isDark={darkMode}>
+      {/* <div className="text-card" id={id} hidden={!props.enabled}>  */}
+      <h1>{props.children ? props.header : ''}</h1>
+      <hr></hr>
+      <br></br>
+      <p>{props.children}</p>
+      <p>{ytHtml.hasAttribute('dark')}</p>
+      <br></br>
+      {/* </div> */}
+    </TextArea>
   )
 }
 
-export default Lyrics
+export default TextCard

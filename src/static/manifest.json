@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Final Project Extension",
+  "name": "SingIt",
   "description": "Get lyrics, subtitles, chords for songs on Youtube",
   "version": "1.0.0",
   "icons": {
@@ -9,13 +9,13 @@
     "128": "icon.png"
   },
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "Final Project Extension",
+    "default_title": "SingIt",
     "default_icon": "icon.png"
   },
   "background": {
     "service_worker": "background.js"
   },
+  "permissions": ["webNavigation", "tabs"],
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/watch*"],
