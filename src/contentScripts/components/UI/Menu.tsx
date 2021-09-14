@@ -1,65 +1,52 @@
 import React, { Fragment } from 'react'
-import './Menu.css'
 import ToggleButton from './ToggleButton'
 import LinkButton from './LinkButton'
 
-function Menu(props) {
-  function getChordsLink() {
-    let linkInjection = `${(props.artistName as String).replace(
-      ' ',
-      '%20'
-    )}%20${(props.songTitle as String).replace(' ', '%20')}`
 
-    return `https://www.ultimate-guitar.com/search.php?search_type=title&value=${linkInjection}`
-  }
+type LinkButtonConfigType = 
+{
+id: string,
+name: string,
+dataStatus: string,
+url: string
+}
+
+type ToggleButtonConfigType = 
+{
+  id: string,
+  name:string,
+  dataStatus: string,
+  toggleFn: (value:boolean) => void 
+}
+const Menu: React.FC<{toggleBtns: ToggleButtonConfigType[], linkBtns: LinkButtonConfigType[]}> = (props) => {
 
   return (
     <Fragment>
-      <ToggleButton
-        id="karaoke"
-        onCheck={props.substoggle}
-        contentStatus={props.subsDataStatus}
-      >
-        Karaoke
-      </ToggleButton>
+      {props.toggleBtns.map((toggleButton) => {
+        return (
+          <ToggleButton
+            id={toggleButton.id}
+            key={toggleButton.id}
+            onCheck={toggleButton.toggleFn}
+            contentStatus={toggleButton.dataStatus}
+          >
+            {toggleButton.name}
+          </ToggleButton>
+        )
+      })}
 
-      <ToggleButton
-        id="lyrics"
-        onCheck={props.lyricstoggle}
-        contentStatus={props.lyricsDataStatus}
-      >
-        Lyrics
-      </ToggleButton>
-
-      <ToggleButton
-        id="wiki"
-        onCheck={props.wikitoggle}
-        contentStatus={props.wikiDataStatus}
-      >
-        About
-      </ToggleButton>
-      <LinkButton
-        url={getChordsLink()}
-        contentStatus={
-          props.subsDataStatus === 'Ready' ||
-          props.lyricsDataStatus === 'Ready' ||
-          props.wikiDataStatus === 'Ready' ||
-          props.spotifyDataStatus === 'Ready'
-            ? 'Ready'
-            : 'Not Available'
-        }
-        id="chords"
-      >
-        Chords
-      </LinkButton>
-
-      <LinkButton
-        contentStatus={props.spotifyDataStatus}
-        url={props.spotifyUrl}
-        id="spotify"
-      >
-        Open in Spotify
-      </LinkButton>
+      {props.linkBtns.map((linkButton) => {
+        return (
+          <LinkButton
+            id={linkButton.id}
+            key={linkButton.id}
+            contentStatus={linkButton.dataStatus}
+            url={linkButton.url}
+          >
+            {linkButton.name}
+          </LinkButton>
+        )
+      })}
     </Fragment>
   )
 }

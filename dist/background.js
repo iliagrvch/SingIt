@@ -1,2 +1,8 @@
-(()=>{var e="";chrome.webNavigation.onHistoryStateUpdated.addListener((o=>{console.log(e),!e.includes("youtube.com/watch")&&o.url.includes("youtube.com/watch")&&(console.log("refreshing"),chrome.tabs.reload()),e=o.url}))})();
-//# sourceMappingURL=background.js.map
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!***************************************!*\
+  !*** ./src/background/background.tsx ***!
+  \***************************************/
+
+/******/ })()
+;

@@ -1,27 +1,20 @@
-.subtitles-container.default {
+.subtitles-container {
   text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black,
     0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
   color: white !important;
   position: absolute;
   font-size: large;
   text-align: center;
-  bottom: 10%;
   width: 100%;
   z-index: 9999;
   font-size: 30px;
   direction: ltr !important;
+  pointer-events: none;
+}
+.subtitles-container.default {
+  bottom: 15%;
 }
 
 .subtitles-container.theater {
-  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black,
-    0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
-  color: white !important;
-  position: absolute;
-  font-size: large;
-  width: 100%;
-  text-align: center;
   bottom: 10%;
-  z-index: 9999;
-  font-size: 30px;
-  direction: ltr !important;
 }

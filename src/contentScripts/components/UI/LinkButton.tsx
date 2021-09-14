@@ -1,47 +1,54 @@
 import React from 'react'
-import styled from 'styled-components'
 import { FaGuitar, FaSpotify } from 'react-icons/fa'
 import { CgUnavailable } from 'react-icons/cg'
+import { BiLink } from 'react-icons/bi'
+import styled from 'styled-components'
 
-function LinkButton(props) {
-  const loadingIcon = <div className="lds-dual-ring"></div>
+const LinkButton: React.FC<{ id: string; contentStatus: string; url: string }> =
+  (props) => {
+    const loadingIcon = <div className="lds-dual-ring"></div>
 
-  function getIconJsx() {
-    if (props.contentStatus === 'Ready') {
-      switch (props.id) {
-        case 'spotify':
-          return <FaSpotify />
-        case 'chords':
-          return <FaGuitar />
+    //* Methods *//
+    function getIconJsx() {
+      if (props.contentStatus === 'Ready') {
+        switch (props.id) {
+          case 'spotify':
+            return <FaSpotify />
+          case 'chords':
+            return <FaGuitar />
+        }
+      } else if (props.contentStatus === 'Loading') return loadingIcon
+      else {
+        return <CgUnavailable />
       }
-    } else if (props.contentStatus === 'Loading') return loadingIcon
-    else {
-      return <CgUnavailable />
     }
+    return (
+      <Button
+        as="a"
+        target="_blank"
+        rel="noopener noreferrer"
+        href={props.url}
+        isLoading={props.contentStatus === 'Loading'}
+        enabled={props.contentStatus !== 'Not Available'}
+      >
+        <label>
+          <span className="cb-link-icon">{<BiLink />}</span>
+          <span className="cb-text">{props.children}</span>
+          <span className="cb-icon">{getIconJsx()}</span>
+        </label>
+      </Button>
+    )
   }
-  return (
-    <Button
-      as="a"
-      target="_blank"
-      rel="noopener noreferrer"
-      href={props.url}
-      enabled={props.contentStatus !== 'Not Available'}
-    >
-      <label>
-        <input hidden></input>
-        <span className="cb-text">{props.children}</span>
-        <span className="cb-icon">{getIconJsx()}</span>
-      </label>
-    </Button>
-  )
-}
 
 export default LinkButton
 
-const Button = styled.button`
+//* Styled components *//
+
+export const Button = styled.button`
   background-color: ${(props) =>
     props.enabled ? 'rgb(150, 150, 150)' : '#FFA2A2'};
-  pointer-events: ${(props) => (props.enabled ? 'auto' : 'none')};
+  pointer-events: ${(props) =>
+    props.enabled && !props.isLoading ? 'auto' : 'none'};
   color: black;
   overflow: hidden;
   display: inline-flex;
@@ -63,7 +70,8 @@ const Button = styled.button`
     background-color: rgb(110, 110, 110);
   }
   & .cb-text,
-  .cb-icon {
+  .cb-icon,
+  .cb-link-icon {
     display: inline-flex;
     align-items: center;
     color: white;
@@ -71,12 +79,18 @@ const Button = styled.button`
   }
 
   & .cb-text {
-    padding: 0 8px;
+    padding: 0 12px;
+    position: relative;
+    bottom: 1.5px;
   }
 
   & .cb-icon {
     padding: 0 12px;
     background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  & .cb-link-icon {
+    padding: 0 12px;
   }
 
   .lds-dual-ring {

@@ -15,10 +15,9 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["webNavigation", "tabs"],
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/watch*"],
+      "matches": ["*://*.youtube.com/*"],
       "js": ["contentScript.js"]
     }
   ]
